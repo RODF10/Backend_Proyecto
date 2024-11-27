@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('doctors', function (Blueprint $table) {
-            $table->id();
+            $table->id(); // Esto define el campo ID como autoincremental
             $table->string('nombre');
             $table->string('apellido');
             $table->string('cedula')->unique();
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('genero');
             $table->string('email')->unique();
             $table->string('password');
-            $table->integer('telefono');
+            $table->string('telefono');
             $table->text('direccion');
             $table->string('imagen')->nullable();
             $table->timestamps();

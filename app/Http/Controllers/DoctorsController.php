@@ -34,12 +34,12 @@ class DoctorsController extends Controller
             'nombre' => 'required|string|max:100',
             'apellido' => 'required|string|max:100',
             'cedula' => 'required|string|unique:doctors',
-            'profesion' => 'nullable|string|max:10',
+            'profesion' => 'nullable|string|max:35',
             'edad' => 'required|integer',
             'genero' => 'required|string|max:10',
             'email' => 'required|email|unique:doctors',
             'password' => 'required|string|min:6',
-            'telefono' => 'nullable|integer|max:10',
+            'telefono' => 'nullable|string|max:15',
             'direccion' => 'nullable|string',
             'imagen' => 'nullable|string',
         ]);
@@ -66,6 +66,8 @@ class DoctorsController extends Controller
             $file->move(public_path('images'), $filename);
             $data['imagen'] = 'images/' . $filename;
         }
+
+        $doctor = Doctors::create($validatedData);
 
         return response()->json($doctor, 201);
     }

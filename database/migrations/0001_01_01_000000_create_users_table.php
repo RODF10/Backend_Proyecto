@@ -35,6 +35,22 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        Schema::create('doctors', function (Blueprint $table) {
+            $table->id();
+            $table->string('nombre');
+            $table->string('apellido');
+            $table->string('cedula')->unique();
+            $table->string('profesion');
+            $table->integer('edad');
+            $table->string('genero');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->string('telefono')->nullable();
+            $table->text('direccion')->nullable();
+            $table->string('imagen')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**
