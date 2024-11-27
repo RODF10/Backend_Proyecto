@@ -43,6 +43,15 @@ class DoctorsController extends Controller
             'direccion' => 'nullable|string',
             'imagen' => 'nullable|string',
         ]);
+        
+        $data = $request->all();
+
+        if ($request->hasFile('imagen')) {
+            $file = $request->file('imagen');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images'), $filename);
+            $data['imagen'] = 'images/' . $filename;
+        }
 
         $doctor = Doctors::create([
             'nombre' => $request->nombre,
@@ -57,17 +66,6 @@ class DoctorsController extends Controller
             'direccion' => $request->direccion,
             'imagen' => $request->imagen,
         ]);
-
-        $data = $request->all();
-
-        if ($request->hasFile('imagen')) {
-            $file = $request->file('imagen');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('images'), $filename);
-            $data['imagen'] = 'images/' . $filename;
-        }
-
-        $doctor = Doctors::create($validatedData);
 
         return response()->json($doctor, 201);
     }
