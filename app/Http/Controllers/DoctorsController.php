@@ -120,13 +120,15 @@ class DoctorsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Doctors $doctors)
+    public function destroy($id)
     {
-        /*User::destroy($doctors);
-        re0/urn response()->json(null, 204);*/
+        $doctor = Doctors::find($id); // Busca el doctor por ID
+        if (!$doctor) {
+            return response()->json(['message' => 'Doctor no encontrado'], 404);
+        }
 
         // Eliminar el doctor
-        $doctors->delete();
+        $doctor->delete();
 
         return response()->json(null, 204);
     }
