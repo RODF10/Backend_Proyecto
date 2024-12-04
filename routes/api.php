@@ -22,3 +22,7 @@ Route::post('/validate-password', [AuthController::class, 'loginDoctor']);
 
 // PACIENTES
 Route::post('/add-patients', [PatientController::class, 'store']);
+Route::get('/{doctorId}/patients', [AuthController::class, 'getDoctorPatients']);
+Route::get('patients/{id}', [PatientController::class, 'show']);
+Route::delete('patients/{id}', [PatientController::class, 'destroy']);
+Route::resource('patients', PatientController::class);

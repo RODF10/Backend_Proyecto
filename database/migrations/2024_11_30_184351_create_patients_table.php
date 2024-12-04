@@ -25,6 +25,7 @@ return new class extends Migration
             $table->text('medical_history')->nullable();
             $table->text('allergies')->nullable();
             $table->string('description');
+            $table->string('last_consultation');
             $table->unsignedBigInteger('doctor_id'); // Coincide con la clave primaria en "doctors"
             $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');
             $table->timestamps();

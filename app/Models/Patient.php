@@ -25,6 +25,7 @@ class Patient extends Model
         'medical_history',     // Antecedentes Patológicos
         'allergies',           // Alergias
         'description',         //Descripcion
+        'last_consultation',   //Ultima Consulta 
         'doctor_id',           // Relación con el doctor
     ];
 

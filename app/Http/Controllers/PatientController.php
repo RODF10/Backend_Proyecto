@@ -23,12 +23,34 @@ class PatientController extends Controller
             'medical_history' => 'nullable|string',
             'allergies' => 'nullable|string',
             'description' => 'required|string',
+            'last_consultation' => 'required|string',
             'doctor_id' => 'required|exists:doctors,id',
         ]);
 
         $patient = Patient::create($validated);
 
         return response()->json($patient, 201);
+    }
+
+    // Obtener un paciente por ID
+    public function show($id)
+    {
+        // Buscar el paciente por el ID
+        $patient = Patient::find($id);
+
+        // Verificar si el paciente existe
+        if (!$patient) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Paciente no encontrado'
+            ], 404);  // Retorna un error 404 si no se encuentra
+        }
+
+        // Devolver los datos del paciente en formato JSON
+        return response()->json([
+            'success' => true,
+            'patient' => $patient
+        ], 200);
     }
 
     public function destroy($id)
