@@ -61,4 +61,34 @@ class AuthController extends Controller
            'patients' => $patients
        ], 200);
    }
+
+   
+    // Método para cambiar la contraseña
+    public function changePassword(Request $request)
+    {
+        // Validar los datos de entrada
+        $validator = Validator::make($request->all(), [
+            'correo' => 'required|email|exists:doctors,email',
+            'password' => 'required|string|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Encontrar al doctor por correo
+        $doctor = Doctors::where('email', $request->correo)->first();
+
+        // Actualizar la contraseña encriptada
+        $doctor->password = $request->password;
+        $doctor->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Contraseña actualizada con éxito.'
+        ], 200);
+    }
 }

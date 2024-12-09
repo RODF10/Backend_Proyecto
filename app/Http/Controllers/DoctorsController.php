@@ -34,13 +34,14 @@ class DoctorsController extends Controller
             'nombre' => 'required|string|max:100',
             'apellido' => 'required|string|max:100',
             'cedula' => 'required|string|unique:doctors',
-            'profesion' => 'nullable|string|max:35',
+            'profesion' => 'required|string|max:35',
+            'date' => 'required|date',
             'edad' => 'required|integer',
             'genero' => 'required|string|max:10',
             'email' => 'required|email|unique:doctors',
             'password' => 'required|string|min:6',
             'telefono' => 'nullable|string|max:15',
-            'direccion' => 'nullable|string',
+            'direccion' => 'required|string',
             'imagen' => 'nullable|string',
         ]);
         
@@ -58,6 +59,7 @@ class DoctorsController extends Controller
             'apellido' => $request->apellido,
             'cedula' => $request->cedula,
             'profesion' => $request->profesion,
+            'date' => $request->date,
             'edad' => $request->edad,
             'genero' => $request->genero,
             'email' => $request->email,
@@ -73,10 +75,30 @@ class DoctorsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Doctors $doctors)
+    public function show($id)
     {
-        //$doctors = User::findOrFail($id);
-        return response()->json($doctors, 200);
+        try {
+            // Buscar al doctor por ID
+            $doctor = Doctors::find($id);
+
+            // Retornar datos del doctor en formato JSON
+            return response()->json([
+                'success' => true,
+                'data' => $doctor,
+            ], 200);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Manejar caso de no encontrar el doctor
+            return response()->json([
+                'success' => false,
+                'message' => 'Doctor no encontrado',
+            ], 404);
+        } catch (\Exception $e) {
+            // Manejar cualquier otro error
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener los datos del doctor',
+            ], 500);
+        }
     }
 
     /**

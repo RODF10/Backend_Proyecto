@@ -14,11 +14,15 @@ class Doctors extends Model
      *
      * @var array<int, string>
      */
+    // Nombre de la tabla (si no sigue la convención por defecto)
+    protected $table = 'doctors';
+    
     protected $fillable = [
         'nombre',
         'apellido',
         'cedula',
         'profesion',
+        'date',
         'edad',
         'genero',
         'email',

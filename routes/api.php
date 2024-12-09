@@ -13,16 +13,16 @@ Route::get('/user', function (Request $request) {
 // DOCTORES
 Route::get('/doctors', [DoctorsController::class, 'index']);
 Route::post('/doctors', [DoctorsController::class, 'store']);
-Route::get('/doctors/{id}', [DoctorsController::class, 'show']);
+Route::get('/doctors{id}', [DoctorsController::class, 'show']);
 Route::put('/doctors/{id}', [DoctorsController::class, 'update']);
 Route::delete('/doctors/{id}', [DoctorsController::class, 'destroy']);
 Route::resource('doctors', DoctorsController::class);
-
+Route::post('/change-password', [AuthController::class, 'changePassword']); // Ruta para cambiar la contraseña
 Route::post('/validate-password', [AuthController::class, 'loginDoctor']);
 
 // PACIENTES
 Route::post('/add-patients', [PatientController::class, 'store']);
-Route::get('/{doctorId}/patients', [AuthController::class, 'getDoctorPatients']);
+Route::get('/doctor{doctorId}/patients', [AuthController::class, 'getDoctorPatients']);
 Route::get('patients/{id}', [PatientController::class, 'show']);
 Route::delete('patients/{id}', [PatientController::class, 'destroy']);
 Route::resource('patients', PatientController::class);
