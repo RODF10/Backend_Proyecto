@@ -31,4 +31,11 @@ class Doctors extends Model
         'direccion',
         'imagen',
     ];
+
+    // Ocultar campos sensibles al devolver datos
+    protected $hidden = [
+        'password', // Oculta la contraseña si no es necesaria
+        'created_at',
+        'updated_at',
+    ];
 }

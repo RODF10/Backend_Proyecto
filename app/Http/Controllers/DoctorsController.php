@@ -27,8 +27,7 @@ class DoctorsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         // Validar los datos de entrada
         $validatedData = $request->validate([
             'nombre' => 'required|string|max:100',
@@ -75,8 +74,7 @@ class DoctorsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
-    {
+    public function show($id) {
         try {
             // Buscar al doctor por ID
             $doctor = Doctors::find($id);
@@ -112,38 +110,38 @@ class DoctorsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Doctors $doctors)
-    {
+    public function update(Request $request, Doctors $doctor) {
         // Validar los datos de entrada
         $validatedData = $request->validate([
             'nombre' => 'nullable|string|max:255',
             'apellido' => 'nullable|string|max:255',
-            'cedula' => 'nullable|string|unique:doctors,cedula,' . $doctors->id,
+            'cedula' => 'nullable|string|max:255', // Validación adicional de cédula se maneja más abajo
             'profesion' => 'nullable|string|max:255',
-            'edad' => 'nullable|integer',
+            'fecha' => 'nullable|date',
             'genero' => 'nullable|string|max:10',
-            'email' => 'nullable|email|unique:doctors,email,' . $doctors->id,
-            'password' => 'nullable|string|min:6',
-            'telefono' => 'nullable|string|max:15',
-            'direccion' => 'nullable|string',
-            'imagen' => 'nullable|string',
+            'telefono' => 'nullable|string|max:10',
+            'direccion' => 'nullable|string|max:255',
         ]);
 
-        // Actualizar el doctor
-        if (isset($validatedData['password'])) {
-            $validatedData['password'] = bcrypt($validatedData['password']);
+        // Verificar si la cédula ya existe en otro doctor
+        if (isset($validatedData['cedula']) && $validatedData['cedula'] != $doctor->cedula) {
+            $cedulaDuplicada = Doctors::where('cedula', $validatedData['cedula'])
+                                  ->where('id', '!=', $doctor->id)
+                                  ->exists();
+
+            if ($cedulaDuplicada) {
+                return response()->json(['error' => 'Cédula duplicada'], 409);
+            }
         }
-
+        // Actualizar el doctor
         $doctor->update($validatedData);
-
-        return response()->json($doctors, 200);
+        return response()->json(['message' => 'Perfil actualizado correctamente', 'doctor' => $doctor], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         $doctor = Doctors::find($id); // Busca el doctor por ID
         if (!$doctor) {
             return response()->json(['message' => 'Doctor no encontrado'], 404);
@@ -153,5 +151,14 @@ class DoctorsController extends Controller
         $doctor->delete();
 
         return response()->json(null, 204);
+    }
+    // Método para verificar si la cédula está duplicada
+    public function checkCedula($cedula, $id = null) {
+        // Verificar si la cédula ya existe
+        $exists = Doctors::where('cedula', $cedula)
+                                ->where('id','!=',$id)
+                                ->exists();
+
+        return response()->json(['exists' => $exists]);
     }
 }

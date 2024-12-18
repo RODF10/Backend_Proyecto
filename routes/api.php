@@ -15,11 +15,12 @@ Route::get('/user', function (Request $request) {
 Route::get('/doctors', [DoctorsController::class, 'index']);
 Route::post('/doctors', [DoctorsController::class, 'store']);
 Route::get('/doctors{id}', [DoctorsController::class, 'show']);
-Route::put('/doctors/{id}', [DoctorsController::class, 'update']);
+Route::put('/doctors/{doctor}', [DoctorsController::class, 'update']);
 Route::delete('/doctors/{id}', [DoctorsController::class, 'destroy']);
 Route::resource('doctors', DoctorsController::class);
 Route::post('/change-password', [AuthController::class, 'changePassword']); // Ruta para cambiar la contraseña
 Route::post('/validate-password', [AuthController::class, 'loginDoctor']);
+Route::get('checkCedula/{cedula}/{id?}', [DoctorsController::class, 'checkCedula']); // Check Cedula
 
 // PACIENTES
 Route::post('/add-patients', [PatientController::class, 'store']);

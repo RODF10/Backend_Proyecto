@@ -70,6 +70,7 @@ class AuthController extends Controller
         // Validar los datos de entrada
         $validator = Validator::make($request->all(), [
             'correo' => 'required|email|exists:doctors,email',
+            'currentPassword' => 'required|string',
             'password' => 'required|string|min:8',
         ]);
 
@@ -82,8 +83,15 @@ class AuthController extends Controller
 
         // Encontrar al doctor por correo
         $doctor = Doctors::where('email', $request->correo)->first();
-        // Encriptar la nueva contraseña
-        $doctor->password = Hash::make($request->password);
+        // Verificar la contraseña actual
+        if (!Hash::check($request->currentPassword, $doctor->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'La contraseña actual no es válida.'
+            ], 401);
+        }
+        // Actualizar la nueva contraseña
+        $doctor->password = Hash::make($request->newPassword);
         // Guardar la contraseña encriptada en la base de datos
         $doctor->save();
 
