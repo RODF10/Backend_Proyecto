@@ -63,7 +63,7 @@ class DoctorsController extends Controller
             'edad' => $request->edad,
             'genero' => $request->genero,
             'email' => $request->email,
-            'password' => $request->password,
+            'password' => Hash::make($request->password),
             'telefono' => $request->telefono,
             'direccion' => $request->direccion,
             'imagen' => $request->imagen,

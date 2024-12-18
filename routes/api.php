@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DoctorsController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CitaController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -26,3 +27,10 @@ Route::get('/doctor{doctorId}/patients', [AuthController::class, 'getDoctorPatie
 Route::get('patients/{id}', [PatientController::class, 'show']);
 Route::delete('patients/{id}', [PatientController::class, 'destroy']);
 Route::resource('patients', PatientController::class);
+
+// CITA DEL DOCTOR DEL PACIENTE
+Route::get('/citas/{doctorId}', [CitaController::class, 'index']); // Listar citas del Doctor
+Route::get('/pacientes/{doctorId}', [CitaController::class, 'pacientesPorDoctor']); // Listar pacientes del doctor
+Route::post('citas', [CitaController::class, 'store']); // Crea Nuvea Cita
+Route::delete('/citas/{id}', [CitaController::class, 'destroy']); // Eliminar una cita
+Route::get('/citas-proximas', [CitaController::class, 'citasProximas']); // Obtener citas futuras

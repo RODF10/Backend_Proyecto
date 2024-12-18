@@ -11,8 +11,7 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
    // Método para autenticar al doctor
-   public function loginDoctor(Request $request)
-   {
+   public function loginDoctor(Request $request) {
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
@@ -21,7 +20,7 @@ class AuthController extends Controller
         $user = Doctors::where('email', $request->email)->first();
 
         // Verificar si el usuario existe y si la contraseña coincide con el hash
-        if ($user && $request->password == $user->password) {
+        if ($user && Hash::check($request->password, $user->password)) {
             return response()->json([
                 'success' => true,
                 'message' => 'Inicio de sesión exitoso',
@@ -29,17 +28,20 @@ class AuthController extends Controller
                     'id' => $user->id,
                     'nombre' => $user->nombre,  // Enviar el nombre del doctor
                     'apellido' => $user->apellido,
-                    'email' => $user->email // Enviar el email si es necesario
+                    'email' => $user->email, // Enviar el email si es necesario
+                    'imagen' => $user->imagen
                 ]
             ], 200);
         }
 
-        return response()->json(['message' => 'Correo o contraseña incorrectos'], 401);
+        return response()->json([
+            'success' => false,
+            'message' => 'Correo o contraseña incorrectos'
+            ], 401); // 401 Unauthorized
    }
 
    // Método para obtener pacientes relacionados con un doctor
-   public function getDoctorPatients($doctorId)
-   {
+   public function getDoctorPatients($doctorId) {
        // Verificar si el doctor existe
        $doctor = Doctors::find($doctorId);
 
@@ -64,8 +66,7 @@ class AuthController extends Controller
 
    
     // Método para cambiar la contraseña
-    public function changePassword(Request $request)
-    {
+    public function changePassword(Request $request) {
         // Validar los datos de entrada
         $validator = Validator::make($request->all(), [
             'correo' => 'required|email|exists:doctors,email',
@@ -81,9 +82,9 @@ class AuthController extends Controller
 
         // Encontrar al doctor por correo
         $doctor = Doctors::where('email', $request->correo)->first();
-
-        // Actualizar la contraseña encriptada
-        $doctor->password = $request->password;
+        // Encriptar la nueva contraseña
+        $doctor->password = Hash::make($request->password);
+        // Guardar la contraseña encriptada en la base de datos
         $doctor->save();
 
         return response()->json([

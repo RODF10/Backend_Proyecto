@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('apellido');
             $table->string('cedula')->unique();
             $table->string('profesion');
+            $table->date('date');
             $table->integer('edad');
             $table->string('genero');
             $table->string('email')->unique();
