@@ -6,6 +6,7 @@ use App\Http\Controllers\DoctorsController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CitaController;
+use App\Http\Controllers\HistoryMedicalController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -35,3 +36,8 @@ Route::get('/pacientes/{doctorId}', [CitaController::class, 'pacientesPorDoctor'
 Route::post('citas', [CitaController::class, 'store']); // Crea Nuvea Cita
 Route::delete('/citas/{id}', [CitaController::class, 'destroy']); // Eliminar una cita
 Route::get('/citas-proximas', [CitaController::class, 'citasProximas']); // Obtener citas futuras
+
+// HISTORIAL MEDICO DEL PACIENTE
+Route::post('/history-medical', [HistoryMedicalController::class, 'store']);
+Route::get('/history-medical', [HistoryMedicalController::class, 'index']);
+Route::get('/history-medical/{id}', [HistoryMedicalController::class, 'show']);
