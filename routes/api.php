@@ -7,6 +7,7 @@ use App\Http\Controllers\PatientController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CitaController;
 use App\Http\Controllers\HistoryMedicalController;
+use App\Http\Controllers\CuidadorController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -41,3 +42,7 @@ Route::get('/citas-proximas', [CitaController::class, 'citasProximas']); // Obte
 Route::post('/history-medical', [HistoryMedicalController::class, 'store']);
 Route::get('/history-medical', [HistoryMedicalController::class, 'index']);
 Route::get('/history-medical/{id}', [HistoryMedicalController::class, 'show']);
+
+// CUIDADOR
+Route::put('/cuidador/{patient_id}', [CuidadorController::class, 'update']);
+Route::get('/cuidador/{patient_id}', [CuidadorController::class, 'getCuidadorByPatientId']);
