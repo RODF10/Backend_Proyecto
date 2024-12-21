@@ -25,6 +25,7 @@ Route::post('/validate-password', [AuthController::class, 'loginDoctor']);
 Route::get('checkCedula/{cedula}/{id?}', [DoctorsController::class, 'checkCedula']); // Check Cedula
 Route::post('doctor/{id}/change-password', [AuthController::class, 'passwordChangeAdmin']); // Admin cambia password del doctor
 Route::post('/doctors/verify-password', [DoctorsController::class, 'verifyPassword']);
+Route::post('/doctors/{id}/update-image', [DoctorsController::class, 'updateImage']); // Update Imagen
 
 // PACIENTES
 Route::post('/add-patients', [PatientController::class, 'store']);

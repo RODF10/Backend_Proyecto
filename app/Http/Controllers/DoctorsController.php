@@ -169,4 +169,23 @@ class DoctorsController extends Controller
 
         return response()->json(false); // Contraseña incorrecta
     }
+    public function updateImage(Request $request, $id)
+    {
+        // Validar que la imagen sea una cadena de texto (puede ser Base64 o URL)
+        $validatedData = $request->validate([
+            'imagen' => 'nullable|string', // Puede ser Base64 o URL
+        ]);
+
+        // Buscar el doctor por ID
+        $doctor = Doctors::findOrFail($id);
+
+        // Si se recibe imagen, actualízala, de lo contrario, borra la imagen (null)
+        $doctor->imagen = $validatedData['imagen'] ?? null;  // Establecer como null si se elimina
+        $doctor->save();  // Guardar cambios
+
+        return response()->json([
+            'message' => 'Imagen actualizada correctamente.',
+            'imagen' => $doctor->imagen,
+        ]);
+    } 
 }
