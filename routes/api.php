@@ -45,6 +45,7 @@ Route::get('/citas-proximas', [CitaController::class, 'citasProximas']); // Obte
 Route::post('/history-medical', [HistoryMedicalController::class, 'store']);
 Route::get('/history-medical', [HistoryMedicalController::class, 'index']);
 Route::get('/history-medical/{id}', [HistoryMedicalController::class, 'show']);
+Route::get('/history-medical/patient/{patientId}', [HistoryMedicalController::class, 'getPatientHistory']);
 
 // CUIDADOR
 Route::put('/cuidador/{patient_id}', [CuidadorController::class, 'update']);

@@ -45,4 +45,33 @@ class HistoryMedicalController extends Controller {
          $historyMedical = HistoryMedical::with(['doctor', 'diagnostic'])->findOrFail($id);
          return response()->json($historyMedical);
      }
+     // Historial del Paciente
+     public function getPatientHistory($numer_imss) {
+        $historyMedicals = HistoryMedical::with(['diagnostic'])
+        ->where('number_imss', $numer_imss)->get();
+
+        if ($historyMedicals->isEmpty()) {
+            return response()->json(['message' => 'No se encontró historial para el número de registro proporcionado.'], 404);
+        }
+
+        return response()->json($historyMedicals);
+    }
+
+    public function getHistory($numberImss)
+    {
+        $historyMedicals = HistoryMedical::with(['doctor', 'diagnostic', 'patient'])
+            ->where('number_imss', $numberImss)
+            ->get();
+
+        // Elimina datos de 'doctor' y 'patient' antes de devolver la respuesta
+        foreach ($historyMedicals as $historyMedical) {
+            $historyMedical->makeHidden(['doctor', 'patient']);
+        }
+
+        if ($historyMedicals->isEmpty()) {
+            return response()->json(['message' => 'No se encontró historial para el número de registro proporcionado.'], 404);
+        }
+
+        return response()->json($historyMedicals);
+    }
 }

@@ -32,4 +32,8 @@ class HistoryMedical extends Model {
      {
          return $this->belongsTo(Diagnostic::class);
      }
+    public function patient(){
+        return $this->hasOne(Patient::class, 'registration_number', 'number_imss');
+    } 
+    
 }

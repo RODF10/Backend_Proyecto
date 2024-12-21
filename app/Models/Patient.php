@@ -33,4 +33,8 @@ class Patient extends Model
     {
         return $this->belongsTo(Doctor::class);
     }
+    public function histories()
+    {
+        return $this->hasMany(HistoryMedical::class, 'number_imss', 'registration_number'); // Asegúrate de que 'patient_id' sea la columna correcta
+    }
 }
