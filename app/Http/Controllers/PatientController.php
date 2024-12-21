@@ -10,26 +10,78 @@ class PatientController extends Controller
 {
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'registration_number' => 'required|string|unique:patients',
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'age' => 'required|integer',
-            'gender' => 'required|string',
+        try{
+            $validated = $request->validate([
+                'registration_number' => 'required|string|unique:patients',
+                'first_name' => 'required|string',
+                'last_name' => 'required|string',
+                'gender' => 'required|string',
+                'birth_date' => 'required|date',
+                'address' => 'required|string',
+                'medical_history' => 'nullable|string',
+                'allergies' => 'nullable|string',
+                'description' => 'required|string',
+                'last_consultation' => 'required|string',
+                'doctor_id' => 'required|exists:doctors,id',
+            ]);
+    
+            $patient = Patient::create($validated);
+    
+            return response()->json($patient, 201);
+            
+        } catch(\Illuminate\Validation\ValidationException $e) {
+            // Captura el error de validación específico de `unique`
+            if ($e->errors()['registration_number'] ?? false) {
+                return response()->json([
+                    'message' => 'El número de registro ya está en uso.',
+                    'errors' => $e->errors()
+                ], 422);
+            }
+
+            // Para otros errores de validación
+            return response()->json([
+                'message' => 'Errores de validación.',
+                'errors' => $e->errors()
+            ], 422);
+        }
+    }
+    public function update(Request $request, $registration_number)
+    {
+        // Encontrar el paciente por su número de registro
+        $patient = Patient::where('registration_number', $registration_number)->first();
+
+        if (!$patient) {
+            return response()->json(['error' => 'Paciente no encontrado'], 404);
+        }
+
+        // Validar los datos de entrada
+        $validatedData = $request->validate([
+            'first_name' => 'required|string|max:255', // Cambiado a 'required' si no permite NULL
+            'last_name' => 'required|string|max:255',
+            'gender' => 'required|string|max:10',
             'birth_date' => 'required|date',
-            'emergency_contact' => 'required|string',
-            'emergency_email' => 'required|email',
-            'address' => 'required|string',
-            'medical_history' => 'nullable|string',
+            'address' => 'required|string|max:255',
+            'medical_history' => 'nullable|string', // Opcional
             'allergies' => 'nullable|string',
-            'description' => 'required|string',
-            'last_consultation' => 'required|string',
-            'doctor_id' => 'required|exists:doctors,id',
+            'description' => 'nullable|string',
+            'registration_number' => 'required|string|max:255', // Validación adicional más abajo
         ]);
 
-        $patient = Patient::create($validated);
+        // Verificar si el nuevo número de registro ya existe en otro paciente
+        if ($validatedData['registration_number'] != $patient->registration_number) {
+            $registrationDuplicate = Patient::where('registration_number', $validatedData['registration_number'])
+                ->exists();
 
-        return response()->json($patient, 201);
+            if ($registrationDuplicate) {
+                return response()->json(['error' => 'Número de registro duplicado'], 409);
+            }
+        }
+
+        // Actualizar el paciente
+        $patient->update($validatedData);
+
+        // Retornar una respuesta exitosa
+        return response()->json(['message' => 'Datos del paciente actualizados correctamente', 'patient' => $patient], 200);
     }
 
     // Obtener un paciente por ID

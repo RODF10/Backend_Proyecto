@@ -23,7 +23,6 @@ class Doctors extends Model
         'cedula',
         'profesion',
         'date',
-        'edad',
         'genero',
         'email',
         'password',

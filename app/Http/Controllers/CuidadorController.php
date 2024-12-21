@@ -31,7 +31,7 @@ class CuidadorController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'patient_id' => 'required|exists:patients,number_registration', // Obligatorio y debe existir
+            'patient_id' => 'required|exists:patients,registration_number', // Obligatorio y debe existir
             'cuidador_name' => 'nullable|string|max:255',
             'cuidador_lastname' => 'nullable|string|max:255',
             'cuidador_phone' => 'nullable|string|max:15',
@@ -39,9 +39,9 @@ class CuidadorController extends Controller
             'cuidador_address' => 'nullable|string',
         ]);
     
-        Cuidador::create($validated);
+        $cuidador = Cuidador::create($validated);
     
-        return redirect()->route('cuidadors.index')->with('success', 'Cuidador creado exitosamente.');
+        return response()->json($cuidador, 201);
     }
 
     /**

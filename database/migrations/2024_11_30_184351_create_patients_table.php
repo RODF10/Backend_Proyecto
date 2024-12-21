@@ -19,8 +19,6 @@ return new class extends Migration
                 $table->integer('age');
                 $table->string('gender');
                 $table->date('birth_date');
-                $table->string('emergency_contact');
-                $table->string('emergency_email');
                 $table->string('address');
                 $table->text('medical_history')->nullable();
                 $table->text('allergies')->nullable();

@@ -13,7 +13,7 @@ class DoctorsController extends Controller
      */
     public function index()
     {
-        return response()->json(Doctors::all(), 200);
+        return response()->json(Doctors::where('id', '!=', 1)->get(), 200);
     }
 
     /**
@@ -35,7 +35,6 @@ class DoctorsController extends Controller
             'cedula' => 'required|string|unique:doctors',
             'profesion' => 'required|string|max:35',
             'date' => 'required|date',
-            'edad' => 'required|integer',
             'genero' => 'required|string|max:10',
             'email' => 'required|email|unique:doctors',
             'password' => 'required|string|min:6',
@@ -59,7 +58,6 @@ class DoctorsController extends Controller
             'cedula' => $request->cedula,
             'profesion' => $request->profesion,
             'date' => $request->date,
-            'edad' => $request->edad,
             'genero' => $request->genero,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -113,14 +111,14 @@ class DoctorsController extends Controller
     public function update(Request $request, Doctors $doctor) {
         // Validar los datos de entrada
         $validatedData = $request->validate([
-            'nombre' => 'nullable|string|max:255',
-            'apellido' => 'nullable|string|max:255',
-            'cedula' => 'nullable|string|max:255', // Validación adicional de cédula se maneja más abajo
-            'profesion' => 'nullable|string|max:255',
-            'fecha' => 'nullable|date',
-            'genero' => 'nullable|string|max:10',
-            'telefono' => 'nullable|string|max:10',
-            'direccion' => 'nullable|string|max:255',
+            'nombre' => 'required|string|max:255',
+            'apellido' => 'required|string|max:255',
+            'cedula' => 'required|string|max:255', // Validación adicional de cédula se maneja más abajo
+            'profesion' => 'required|string|max:255',
+            'date' => 'required|date',
+            'genero' => 'required|string|max:10',
+            'telefono' => 'required|string|max:10',
+            'direccion' => 'required|string|max:255',
         ]);
 
         // Verificar si la cédula ya existe en otro doctor
@@ -160,5 +158,15 @@ class DoctorsController extends Controller
                                 ->exists();
 
         return response()->json(['exists' => $exists]);
+    }
+    public function verifyPassword(Request $request)
+    {
+        $doctor = Doctors::find($request->doctorId);
+
+        if ($doctor && Hash::check($request->password, $doctor->password)) {
+            return response()->json(true);  // Contraseña correcta
+        }
+
+        return response()->json(false); // Contraseña incorrecta
     }
 }

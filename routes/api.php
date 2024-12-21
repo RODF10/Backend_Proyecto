@@ -23,6 +23,8 @@ Route::resource('doctors', DoctorsController::class);
 Route::post('/change-password', [AuthController::class, 'changePassword']); // Ruta para cambiar la contraseña
 Route::post('/validate-password', [AuthController::class, 'loginDoctor']);
 Route::get('checkCedula/{cedula}/{id?}', [DoctorsController::class, 'checkCedula']); // Check Cedula
+Route::post('doctor/{id}/change-password', [AuthController::class, 'passwordChangeAdmin']); // Admin cambia password del doctor
+Route::post('/doctors/verify-password', [DoctorsController::class, 'verifyPassword']);
 
 // PACIENTES
 Route::post('/add-patients', [PatientController::class, 'store']);
@@ -30,6 +32,7 @@ Route::get('/doctor{doctorId}/patients', [AuthController::class, 'getDoctorPatie
 Route::get('patients/{id}', [PatientController::class, 'show']);
 Route::delete('patients/{id}', [PatientController::class, 'destroy']);
 Route::resource('patients', PatientController::class);
+Route::put('/patients/{registration_number}', [PatientController::class, 'update']);
 
 // CITA DEL DOCTOR DEL PACIENTE
 Route::get('/citas/{doctorId}', [CitaController::class, 'index']); // Listar citas del Doctor
@@ -46,3 +49,4 @@ Route::get('/history-medical/{id}', [HistoryMedicalController::class, 'show']);
 // CUIDADOR
 Route::put('/cuidador/{patient_id}', [CuidadorController::class, 'update']);
 Route::get('/cuidador/{patient_id}', [CuidadorController::class, 'getCuidadorByPatientId']);
+Route::post('/cuidador', [CuidadorController::class, 'store']);

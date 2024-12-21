@@ -16,15 +16,12 @@ class Patient extends Model
         'registration_number', // Matricula
         'first_name',          // Nombre
         'last_name',           // Apellido
-        'age',                 // Edad
         'gender',              // Género
         'birth_date',          // Fecha de Nacimiento
-        'emergency_contact',   // Contacto de Emergencia
-        'emergency_email',     // Email de Emergencia
         'address',             // Domicilio
         'medical_history',     // Antecedentes Patológicos
         'allergies',           // Alergias
-        'description',         //Descripcion
+        'description',         // Descripcion
         'last_consultation',   //Ultima Consulta 
         'doctor_id',           // Relación con el doctor
     ];

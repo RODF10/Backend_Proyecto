@@ -100,4 +100,27 @@ class AuthController extends Controller
             'message' => 'Contraseña actualizada con éxito.'
         ], 200);
     }
+    public function passwordChangeAdmin(Request $request, $id)
+    {
+        // Validación de la nueva contraseña
+        $validatedData = $request->validate([
+            'password' => 'required|string|min:8',  // Confirmación de la contraseña
+        ]);
+
+        // Verificar si el doctor existe con el ID proporcionado
+        $doctor = Doctors::find($id);
+
+        if (!$doctor) {
+            // Si no se encuentra el doctor con ese ID, devolver error
+            return response()->json(['error' => 'Doctor no encontrado.'], 404);
+        }
+
+        // Cambiar la contraseña
+        $doctor->password = Hash::make($validatedData['password']);
+        
+        // Guardar el cambio en la base de datos
+        $doctor->save();
+
+        return response()->json(['message' => 'Contraseña actualizada correctamente.'], 200);
+    }
 }
