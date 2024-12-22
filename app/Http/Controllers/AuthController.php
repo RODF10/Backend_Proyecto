@@ -123,4 +123,20 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Contraseña actualizada correctamente.'], 200);
     }
+
+    public function getImage($id){
+        // Busca al doctor por ID
+        $doctor = Doctors::find($id);
+
+        if (!$doctor) {
+            return response()->json(['error' => 'Doctor no encontrado'], 404);
+        }
+
+        if (!$doctor->imagen) {
+            return response()->json(['error' => 'Imagen no disponible'], 404);
+        }
+
+        // Devuelve directamente el contenido del campo imagen
+        return response()->json(['imagen' => $doctor->imagen], 200);
+    }
 }
