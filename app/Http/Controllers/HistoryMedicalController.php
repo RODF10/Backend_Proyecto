@@ -15,7 +15,7 @@ class HistoryMedicalController extends Controller {
             'doctor_id' => 'required|exists:doctors,id',
             'diagnostic_id' => 'required|exists:diagnostic,id',
             'encuesta' => 'required|string',
-            'puntos' => 'required|integer',
+            'puntos' => 'required|string',
             'observacion' => 'required|string',
             'fecha' => 'required|date',
             'hora' => 'required|date_format:H:i:s',

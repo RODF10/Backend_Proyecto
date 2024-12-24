@@ -34,7 +34,7 @@ return new class extends Migration
                 
                 // Otros campos
                 $table->string('encuesta')->nullable(); // Encuesta
-                $table->integer('puntos')->default(0); // Puntos de la encuesta
+                $table->string('puntos')->nullable(); // Puntos de la encuesta
                 $table->text('observacion')->nullable(); // Observaciones
                 $table->date('fecha'); // Fecha
                 $table->time('hora'); // Hora
